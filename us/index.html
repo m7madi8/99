@@ -52,8 +52,8 @@
     <link rel="icon" type="image/png" sizes="192x192" href="../img/99cafe-logo2.png">
     <link rel="icon" type="image/png" sizes="512x512" href="../img/99cafe-logo2.png">
     <link rel="apple-touch-icon" sizes="180x180" href="../img/99cafe-logo2.png">
-    <!-- Tailwind CSS CDN - For development only. Use PostCSS plugin or CLI for production -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind CSS - Built for production -->
+    <link rel="stylesheet" href="tailwind.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
@@ -61,30 +61,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Lalezar&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="us.css">
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    container: {
-                        center: true,
-                        padding: '1rem'
-                    },
-                    fontFamily: {
-                        'montserrat': ['Montserrat', 'sans-serif'],
-                    },
-                    colors: {
-                        'cafe-red': '#D90429',
-                        'cafe-red-light': '#EF233C',
-                        'cafe-black': '#222',
-                        'cafe-black-dark': '#000',
-                        'cafe-white': '#fff',
-                        'cafe-gray': '#f8f8f8',
-                    }
-                }
-            }
-        }
-    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body class="bg-cafe-white min-h-screen">
