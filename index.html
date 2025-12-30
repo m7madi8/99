@@ -1378,6 +1378,15 @@ body{
   background:linear-gradient(90deg, transparent 0%, var(--primary) 50%, transparent 100%);
 }
 
+.careers-title-wrapper{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:20px;
+  flex-wrap:wrap;
+  margin-bottom:24px;
+}
+
 .careers-title{
   font-family:'Cinzel', 'Georgia', serif;
   font-size:clamp(36px, 5vw, 56px);
@@ -1388,7 +1397,20 @@ body{
   background-clip:text;
   letter-spacing:-0.04em;
   line-height:1.1;
-  margin-bottom:24px;
+  margin:0;
+}
+
+.careers-logo-standalone{
+  height:clamp(80px, 10vw, 120px);
+  width:auto;
+  object-fit:contain;
+  filter:drop-shadow(0 4px 16px rgba(196,22,28,0.2));
+  transition:transform 0.4s ease, filter 0.4s ease;
+}
+
+.careers-logo-standalone:hover{
+  transform:scale(1.08);
+  filter:drop-shadow(0 6px 20px rgba(196,22,28,0.3));
 }
 
 .careers-description{
@@ -1464,9 +1486,17 @@ body{
     padding:var(--spacing-md) 0;
   }
   
+  .careers-title-wrapper{
+    margin-bottom:16px;
+    gap:16px;
+  }
+  
   .careers-title{
     font-size:clamp(32px, 3.5vw, 48px);
-    margin-bottom:16px;
+  }
+  
+  .careers-logo-standalone{
+    height:clamp(64px, 8vw, 96px);
   }
   
   .careers-description{
@@ -1487,6 +1517,19 @@ body{
   
   .careers-content{
     padding:var(--spacing-md) 0;
+  }
+  
+  .careers-title-wrapper{
+    gap:12px;
+    margin-bottom:20px;
+  }
+  
+  .careers-title{
+    font-size:clamp(28px, 6vw, 40px);
+  }
+  
+  .careers-logo-standalone{
+    height:clamp(56px, 9vw, 80px);
   }
   
   .careers-description{
@@ -2014,7 +2057,7 @@ body{
   
   <!-- Navigation -->
   <nav class="nav">
-    <a href="#" class="nav-logo">
+    <a href="index.html" class="nav-logo">
       <img src="img/99logo.png" alt="99">
     </a>
     <ul class="nav-menu">
@@ -2110,7 +2153,10 @@ body{
     <div class="careers-container">
       <div class="careers-content">
         <div class="careers-label">Join Our Team</div>
-        <h2 class="careers-title">Careers at 99 Cafe</h2>
+        <div class="careers-title-wrapper">
+          <h2 class="careers-title">Careers at</h2>
+          <img src="img/99logo.png" alt="99 Cafe" class="careers-logo-standalone">
+        </div>
         <p class="careers-description">
           We're looking for passionate individuals who share our commitment to excellence and refined service. Explore opportunities and become part of the 99 Cafe family.
         </p>
