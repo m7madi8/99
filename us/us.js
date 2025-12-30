@@ -550,9 +550,25 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         const adminItems = JSON.parse(stored);
         if (!Array.isArray(adminItems) || adminItems.length === 0) return;
         
+        // Filter out Fresher items (Tango Fresher, Pango Fresher, etc.)
+        const filteredItems = adminItems.filter(item => {
+            const nameEn = (item.nameEn || '').toLowerCase();
+            const nameAr = (item.nameAr || '').toLowerCase();
+            const group = (item.group || '').toLowerCase();
+            
+            // Remove items with "Fresher" in name or group
+            if (nameEn.includes('fresher') || nameAr.includes('فريشر') || 
+                nameEn.includes('tango fresher') || nameAr.includes('تانغو فريشر') ||
+                nameEn.includes('pango fresher') || nameAr.includes('بانغو فريشر') ||
+                group.includes('fresher') || group.includes('فريشر')) {
+                return false;
+            }
+            return true;
+        });
+        
         // Group items by category and group
         const grouped = {};
-        adminItems.forEach(item => {
+        filteredItems.forEach(item => {
             if (!grouped[item.category]) grouped[item.category] = {};
             if (!grouped[item.category][item.group || 'default']) {
                 grouped[item.category][item.group || 'default'] = [];
@@ -662,7 +678,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         
         // Apply translations if language changes
         const observer = new MutationObserver(() => {
-            adminItems.forEach(item => {
+            filteredItems.forEach(item => {
                 const itemEl = document.querySelector(`[data-item-id="${item.id}"]`);
                 if (!itemEl) return;
                 const h4 = itemEl.querySelector('h4');
@@ -685,10 +701,10 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
 // Hide preloader when page is loaded
 window.addEventListener('load', () => {
-    const preloader = document.getElementById('preloader');
-    if (preloader) {
+    const loader = document.getElementById('loader');
+    if (loader) {
         setTimeout(() => {
-            preloader.classList.add('hidden');
+            loader.classList.add('hidden');
         }, 1500);
     }
 });
@@ -718,5 +734,439 @@ window.addEventListener('load', () => {
     btn.addEventListener('click', () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     });
+})();
+
+// Enhanced Image Loading for Menu Items
+(function initImageLoading() {
+    const menuCards = document.querySelectorAll('.menu-item-card');
+    
+    menuCards.forEach((card, index) => {
+        // Set animation delay based on index
+        card.style.setProperty('--index', index);
+        
+        const imageContainer = card.querySelector('.menu-item-image');
+        if (!imageContainer) return;
+        
+        const img = imageContainer.querySelector('img');
+        if (!img) return;
+        
+        // Add loading class
+        imageContainer.classList.add('loading');
+        
+        // Handle image load
+        img.addEventListener('load', () => {
+            imageContainer.classList.remove('loading');
+            img.classList.add('loaded');
+        });
+        
+        // Handle image error
+        img.addEventListener('error', () => {
+            imageContainer.classList.remove('loading');
+            // Keep placeholder icon visible
+        });
+        
+        // If image has src, trigger load
+        if (img.src && img.src !== window.location.href) {
+            img.loading = 'lazy';
+        }
+    });
+})();
+
+// Intersection Observer for Lazy Loading Images
+(function initLazyLoading() {
+    if ('IntersectionObserver' in window) {
+        const imageObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    if (img.dataset.src) {
+                        img.src = img.dataset.src;
+                        img.removeAttribute('data-src');
+                        observer.unobserve(img);
+                    }
+                }
+            });
+        }, {
+            rootMargin: '50px'
+        });
+        
+        document.querySelectorAll('.menu-item-image img[data-src]').forEach(img => {
+            imageObserver.observe(img);
+        });
+    }
+})();
+
+// Enhanced Card Interactions
+(function initCardInteractions() {
+    const cards = document.querySelectorAll('.menu-item-card');
+    
+    cards.forEach(card => {
+        // Add click ripple effect
+        card.addEventListener('click', function(e) {
+            const ripple = document.createElement('span');
+            const rect = this.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = e.clientX - rect.left - size / 2;
+            const y = e.clientY - rect.top - size / 2;
+            
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            ripple.classList.add('ripple-effect');
+            
+            this.appendChild(ripple);
+            
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        });
+    });
+})();
+
+// Add ripple effect CSS dynamically
+const style = document.createElement('style');
+style.textContent = `
+    .ripple-effect {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(217, 4, 41, 0.3);
+        transform: scale(0);
+        animation: ripple-animation 0.6s ease-out;
+        pointer-events: none;
+        z-index: 10;
+    }
+    
+    @keyframes ripple-animation {
+        to {
+            transform: scale(4);
+            opacity: 0;
+        }
+    }
+`;
+document.head.appendChild(style);
+
+// Menu Filtering Functionality
+(function initMenuFiltering() {
+    // Handle filtering for each category separately
+    function initCategoryFiltering(categoryId) {
+        const categoryEl = document.getElementById(categoryId);
+        if (!categoryEl) return;
+        
+        const filterButtons = categoryEl.querySelectorAll('.filter-btn');
+        const menuItems = categoryEl.querySelectorAll('.menu-item-card');
+        
+        if (!filterButtons.length || !menuItems.length) return;
+        
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const filterValue = this.getAttribute('data-filter');
+                
+                // Remove active class from all buttons in this category
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                // Filter menu items in this category only
+                menuItems.forEach(item => {
+                    const itemFilter = item.getAttribute('data-filter');
+                    
+                    if (filterValue === 'all' || filterValue === 'all-food' || itemFilter === filterValue) {
+                        // Show item with animation
+                        item.style.display = '';
+                        item.style.opacity = '0';
+                        item.style.transform = 'scale(0.9)';
+                        
+                        setTimeout(() => {
+                            item.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                            item.style.opacity = '1';
+                            item.style.transform = 'scale(1)';
+                        }, 10);
+                    } else {
+                        // Hide item with animation
+                        item.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
+                        item.style.opacity = '0';
+                        item.style.transform = 'scale(0.9)';
+                        
+                        setTimeout(() => {
+                            item.style.display = 'none';
+                        }, 200);
+                    }
+                });
+            });
+        });
+    }
+    
+    // Initialize filtering for each category
+    initCategoryFiltering('drinks');
+    initCategoryFiltering('food');
+    initCategoryFiltering('desserts');
+})();
+
+// Add attractive taglines to menu items based on category
+(function() {
+    const isArabic = document.documentElement.classList.contains('ar') || document.documentElement.dir === 'rtl';
+    
+    const taglines = {
+        // Drinks taglines
+        drinks: isArabic ? [
+            "مصنوع بشغف، يُقدم بكمال",
+            "لحظة من المتعة الخالصة",
+            "حيث يلتقي الطعم بالفن",
+            "ارتشف، استمتع، واحتفل",
+            "ارتقِ بتجربة القهوة",
+            "مخمرة إلى الكمال، تُقدم بحب",
+            "كل كوب يحكي قصة",
+            "تذوق الفرق، اشعر بالجودة"
+        ] : [
+            "Crafted with passion, served with perfection",
+            "A moment of pure indulgence",
+            "Where flavor meets artistry",
+            "Sip, savor, and celebrate",
+            "Elevate your coffee experience",
+            "Brewed to perfection, served with love",
+            "Every cup tells a story",
+            "Taste the difference, feel the quality"
+        ],
+        // Food taglines
+        food: isArabic ? [
+            "مكونات طازجة، نكهات جريئة",
+            "رحلة طهوية تنتظرك",
+            "مصنوع بحب، يُقدم بعناية",
+            "حيث يلتقي الطعم بالتقاليد",
+            "استمتع بكل قضمة لذيذة",
+            "مصمم للذواق المميز",
+            "مكونات عالية الجودة، طعم استثنائي",
+            "وليمة لحواسك"
+        ] : [
+            "Fresh ingredients, bold flavors",
+            "A culinary journey awaits",
+            "Made with love, served with care",
+            "Where taste meets tradition",
+            "Savor every delicious bite",
+            "Crafted for the discerning palate",
+            "Quality ingredients, exceptional taste",
+            "A feast for your senses"
+        ],
+        // Desserts taglines
+        desserts: isArabic ? [
+            "لحظات حلوة، ذكريات لا تُنسى",
+            "استمتع بالحلاوة الخالصة",
+            "متعَة لروحك",
+            "حيث تلتقي الحلاوة بالكمال",
+            "الحياة أحلى مع الحلوى",
+            "مصنوع بحب، يُقدم بفرح",
+            "كل قضمة احتفال",
+            "أحلام حلوة تتحقق"
+        ] : [
+            "Sweet moments, unforgettable memories",
+            "Indulge in pure sweetness",
+            "A treat for your soul",
+            "Where sweetness meets perfection",
+            "Life is sweeter with dessert",
+            "Crafted with love, served with joy",
+            "Every bite is a celebration",
+            "Sweet dreams made real"
+        ]
+    };
+    
+    function getCategoryFromCard(card) {
+        // Check parent category section
+        const drinksSection = card.closest('#drinks');
+        const foodSection = card.closest('#food');
+        const dessertsSection = card.closest('#desserts');
+        
+        if (drinksSection) return 'drinks';
+        if (foodSection) return 'food';
+        if (dessertsSection) return 'desserts';
+        return 'drinks'; // default
+    }
+    
+    function addTaglinesToCards() {
+        const cards = document.querySelectorAll('.menu-item-card');
+        const categoryCounts = { drinks: 0, food: 0, desserts: 0 };
+        
+        cards.forEach(card => {
+            // Skip if tagline already exists
+            if (card.querySelector('.menu-item-tagline')) return;
+            
+            const category = getCategoryFromCard(card);
+            const categoryTaglines = taglines[category] || taglines.drinks;
+            const index = categoryCounts[category] % categoryTaglines.length;
+            const tagline = categoryTaglines[index];
+            
+            categoryCounts[category]++;
+            
+            // Find the header and prices
+            const header = card.querySelector('.menu-item-header');
+            const prices = card.querySelector('.menu-item-prices');
+            const content = card.querySelector('.menu-item-content');
+            
+            if (header && prices && content) {
+                // Create tagline element
+                const taglineEl = document.createElement('div');
+                taglineEl.className = 'menu-item-tagline';
+                taglineEl.textContent = tagline;
+                
+                // Insert between header and prices
+                if (header.nextSibling === prices) {
+                    content.insertBefore(taglineEl, prices);
+                } else {
+                    // If there's description, insert after it
+                    const description = card.querySelector('.menu-item-description');
+                    if (description) {
+                        description.parentNode.insertBefore(taglineEl, description.nextSibling);
+                    } else {
+                        header.parentNode.insertBefore(taglineEl, prices);
+                    }
+                }
+            }
+        });
+    }
+    
+    // Function to update taglines when language changes
+    function updateTaglines() {
+        const isArabic = document.documentElement.classList.contains('ar') || document.documentElement.dir === 'rtl';
+        const currentTaglines = {
+            drinks: isArabic ? [
+                "مصنوع بشغف، يُقدم بكمال",
+                "لحظة من المتعة الخالصة",
+                "حيث يلتقي الطعم بالفن",
+                "ارتشف، استمتع، واحتفل",
+                "ارتقِ بتجربة القهوة",
+                "مخمرة إلى الكمال، تُقدم بحب",
+                "كل كوب يحكي قصة",
+                "تذوق الفرق، اشعر بالجودة"
+            ] : [
+                "Crafted with passion, served with perfection",
+                "A moment of pure indulgence",
+                "Where flavor meets artistry",
+                "Sip, savor, and celebrate",
+                "Elevate your coffee experience",
+                "Brewed to perfection, served with love",
+                "Every cup tells a story",
+                "Taste the difference, feel the quality"
+            ],
+            food: isArabic ? [
+                "مكونات طازجة، نكهات جريئة",
+                "رحلة طهوية تنتظرك",
+                "مصنوع بحب، يُقدم بعناية",
+                "حيث يلتقي الطعم بالتقاليد",
+                "استمتع بكل قضمة لذيذة",
+                "مصمم للذواق المميز",
+                "مكونات عالية الجودة، طعم استثنائي",
+                "وليمة لحواسك"
+            ] : [
+                "Fresh ingredients, bold flavors",
+                "A culinary journey awaits",
+                "Made with love, served with care",
+                "Where taste meets tradition",
+                "Savor every delicious bite",
+                "Crafted for the discerning palate",
+                "Quality ingredients, exceptional taste",
+                "A feast for your senses"
+            ],
+            desserts: isArabic ? [
+                "لحظات حلوة، ذكريات لا تُنسى",
+                "استمتع بالحلاوة الخالصة",
+                "متعَة لروحك",
+                "حيث تلتقي الحلاوة بالكمال",
+                "الحياة أحلى مع الحلوى",
+                "مصنوع بحب، يُقدم بفرح",
+                "كل قضمة احتفال",
+                "أحلام حلوة تتحقق"
+            ] : [
+                "Sweet moments, unforgettable memories",
+                "Indulge in pure sweetness",
+                "A treat for your soul",
+                "Where sweetness meets perfection",
+                "Life is sweeter with dessert",
+                "Crafted with love, served with joy",
+                "Every bite is a celebration",
+                "Sweet dreams made real"
+            ]
+        };
+        
+        const cards = document.querySelectorAll('.menu-item-card');
+        const categoryCounts = { drinks: 0, food: 0, desserts: 0 };
+        
+        cards.forEach(card => {
+            const taglineEl = card.querySelector('.menu-item-tagline');
+            if (!taglineEl) return;
+            
+            const category = getCategoryFromCard(card);
+            const categoryTaglines = currentTaglines[category] || currentTaglines.drinks;
+            const index = categoryCounts[category] % categoryTaglines.length;
+            const tagline = categoryTaglines[index];
+            
+            categoryCounts[category]++;
+            taglineEl.textContent = tagline;
+        });
+    }
+    
+    // Run when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', addTaglinesToCards);
+    } else {
+        addTaglinesToCards();
+    }
+    
+    // Watch for language changes
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                const isArabic = document.documentElement.classList.contains('ar');
+                if (isArabic !== (mutation.target.dir === 'rtl')) {
+                    updateTaglines();
+                }
+            }
+            if (mutation.type === 'attributes' && mutation.attributeName === 'dir') {
+                updateTaglines();
+            }
+        });
+    });
+    
+    observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'dir']
+    });
+    
+    // Also run after category switching
+    setTimeout(addTaglinesToCards, 500);
+})();
+
+// Hide icon placeholder when image is present
+(function() {
+    function hideIconsWhenImagePresent() {
+        document.querySelectorAll('.menu-item-image').forEach(imageContainer => {
+            const img = imageContainer.querySelector('img');
+            const icon = imageContainer.querySelector('.icon-placeholder');
+            
+            if (img && icon) {
+                // Check if image has a valid src and is loaded
+                if (img.src && img.src !== window.location.href) {
+                    icon.style.display = 'none';
+                } else {
+                    // If image fails to load, show icon
+                    img.addEventListener('error', () => {
+                        icon.style.display = 'block';
+                    });
+                    // If image loads successfully, hide icon
+                    img.addEventListener('load', () => {
+                        icon.style.display = 'none';
+                    });
+                }
+            }
+        });
+    }
+    
+    // Run when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', hideIconsWhenImagePresent);
+    } else {
+        hideIconsWhenImagePresent();
+    }
+    
+    // Also run after category switching
+    setTimeout(hideIconsWhenImagePresent, 500);
 })();
 

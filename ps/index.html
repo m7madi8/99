@@ -44,7 +44,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="../img/99cafe-logo2.png">
     <link rel="icon" type="image/png" sizes="16x16" href="../img/99cafe-logo2.png">
     <link rel="shortcut icon" href="../img/99cafe-logo2.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="99cafe-logo2.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../img/99cafe-logo2.png">
     <!-- Tailwind CSS CDN - For development only. Use PostCSS plugin or CLI for production -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -184,7 +184,7 @@
         food: ["[data-category='food'] .tab-label"],
         desserts: ["[data-category='desserts'] .tab-label"],
         hookah: ["[data-category='hookah'] .tab-label"],
-        loading: ["#preloader .loading-label"],
+        loading: ["#loader .loader-text"],
         surpriseTitle: ["#surpriseTitleLabel"],
         tryAnother: ["#anotherSurprise"],
         gotoDrinks: ["#gotoDrinks"],
@@ -275,7 +275,6 @@
         'Hot Tea': 'شاي ساخن',
         'English breakfast, green, mint': 'إفطار إنجليزي، أخضر، نعناع',
         // Group titles
-        'Fresher': 'منعشات',
         'Iced Latte': 'لاتيه بارد',
         'Hot Latte': 'لاتيه ساخن',
         'Hot Coffee': 'قهوة ساخنة',
@@ -310,34 +309,6 @@
         'Disposable hose  + 5 NIS': 'بربيج للاستخدام مره واحده  + 5 NIS',
         'add chicken + 5 NIS': 'أضف دجاج + 5 NIS',
 
-        // Fresher items
-        'Tango Fresher': 'تانغو فريشر',
-        '(Green Apple & Kiwi)': '(تفاح أخضر وكيوي)',
-        'Streki Fresher': 'ستريكي فريشر',
-        '(Strawberry & Kiwi)': '(فراولة وكيوي)',
-        'Pinerazz Fresher': 'باينراز فريشر',
-        '(Pineapple & Raspberry)': '(أناناس وتوت علّيق)',
-        'Hawaiian Fresher': 'هاواي فريشر',
-        '(Tropical & Pineapple)': '(استوائي وأناناس)',
-        'Zest Fresher': 'زيست فريشر',
-        '(Watermelon & Green Apple)': '(بطيخ وتفاح أخضر)',
-        'Pango Fresher': 'بانغو فريشر',
-        '(Pashion Fruit & Mango)': '(باشن فروت ومانجو)',
-        'Pina Colada': 'بينيا كولادا',
-        '(Pineapple & Coconut)': '(أناناس وجوز هند)',
-        'choose Your own Fresher': 'اختر الفريشر الخاص بك',
-        '(Pineapple)': '(أناناس)',
-        '(Blueberry)': '(توت أزرق)',
-        '(Mixberry )': '(توت مشكّل )',
-        '(Mango)': '(مانجو)',
-        '(Kiwi)': '(كيوي)',
-        '(Apple)': '(تفاح)',
-        '(Strawberry)': '(فراولة)',
-        '(Passion Fruit)': '(باشن فروت)',
-        '(Raspberry)': '(توت علّيق)',
-        '(Blu Curacao)': '(بلو كوراكاو)',
-        '(Coconut)': '(جوز هند)',
-        '(Watermelon)': '(بطيخ)',
 
         // Iced Latte items
         'Iced Spanish Latte': 'سبانيش لاتيه بارد',
@@ -1097,44 +1068,20 @@
         #breakfastModal.show .bf-item:nth-child(6) { animation-delay: .31s; }
         #breakfastModal.closing .bf-content { animation: bfFadeOutDown .25s ease forwards; }
 
-        /* Loading Screen - Ultra Premium */
+        /* Loading Screen - Ultra Refined */
         .loader{
           position:fixed;
           top:0;
           left:0;
           width:100%;
           height:100%;
-          background:linear-gradient(135deg, #faf8f5 0%, #ffffff 50%, #faf8f5 100%);
+          background:#ffffff;
           z-index:10000;
           display:flex;
           align-items:center;
           justify-content:center;
-          transition:opacity 1s cubic-bezier(0.4, 0, 0.2, 1), visibility 1s ease;
+          transition:opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.6s ease;
           overflow:hidden;
-        }
-
-        .loader::before{
-          content:'';
-          position:absolute;
-          top:-50%;
-          left:-50%;
-          width:200%;
-          height:200%;
-          background:radial-gradient(circle, rgba(217,4,41,0.03) 0%, transparent 70%);
-          animation:rotate 20s linear infinite;
-        }
-
-        .loader::after{
-          content:'';
-          position:absolute;
-          top:50%;
-          left:50%;
-          transform:translate(-50%, -50%);
-          width:400px;
-          height:400px;
-          border-radius:50%;
-          background:radial-gradient(circle, rgba(217,4,41,0.05) 0%, transparent 70%);
-          animation:pulse 3s ease-in-out infinite;
         }
 
         .loader.hidden{
@@ -1147,186 +1094,133 @@
           text-align:center;
           position:relative;
           z-index:2;
+          display:flex;
+          flex-direction:column;
+          align-items:center;
+          gap:48px;
         }
 
         .loader-logo{
           opacity:0;
-          transform:scale(0.7) translateY(30px) rotate(-5deg);
-          animation:logoEntrance 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) 0.4s forwards;
+          transform:translateY(20px);
+          animation:logoReveal 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s forwards;
           display:inline-block;
           position:relative;
-          filter:drop-shadow(0 20px 60px rgba(217,4,41,0.15));
-        }
-
-        .loader-logo::before{
-          content:'';
-          position:absolute;
-          top:-20px;
-          left:-20px;
-          right:-20px;
-          bottom:-20px;
-          border:2px solid rgba(217,4,41,0.1);
-          border-radius:50%;
-          animation:ringPulse 2s ease-in-out infinite;
-        }
-
-        .loader-logo::after{
-          content:'';
-          position:absolute;
-          top:50%;
-          left:50%;
-          transform:translate(-50%, -50%) scale(0);
-          width:120%;
-          height:120%;
-          background:radial-gradient(circle, rgba(217,4,41,0.2) 0%, transparent 70%);
-          border-radius:50%;
-          animation:logoGlow 2s ease-in-out infinite;
-          z-index:-1;
         }
 
         .loader-logo img{
-          width:clamp(150px, 25vw, 280px);
+          width:clamp(140px, 22vw, 220px);
           height:auto;
           object-fit:contain;
-          filter:drop-shadow(0 15px 40px rgba(217,4,41,0.25));
+          filter:drop-shadow(0 4px 16px rgba(196,22,28,0.08));
           position:relative;
           z-index:1;
-          animation:logoFloat 3s ease-in-out infinite;
+        }
+
+        .loader-line{
+          width:1px;
+          height:60px;
+          background:linear-gradient(180deg, transparent 0%, #c4161c 50%, transparent 100%);
+          opacity:0;
+          animation:lineReveal 1.2s ease 0.5s forwards;
+          position:relative;
+        }
+
+        .loader-line::after{
+          content:'';
+          position:absolute;
+          top:0;
+          left:50%;
+          transform:translateX(-50%);
+          width:1px;
+          height:0;
+          background:#c4161c;
+          animation:lineDraw 1.2s ease 0.5s forwards;
         }
 
         .loader-text{
-          font-family:'Montserrat', 'Tajawal', sans-serif;
-          font-size:clamp(16px, 2vw, 22px);
-          color:#6b7280;
-          margin-top:40px;
-          letter-spacing:0.25em;
+          font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          font-size:11px;
+          color:#6b6b6b;
+          letter-spacing:0.3em;
           text-transform:uppercase;
-          font-weight:500;
+          font-weight:400;
           opacity:0;
-          animation:fadeInUp 1s ease 0.8s forwards;
+          animation:textReveal 0.8s ease 0.8s forwards;
           text-rendering:optimizeLegibility;
           -webkit-font-smoothing:antialiased;
           -moz-osx-font-smoothing:grayscale;
           line-height:1.5;
-          position:relative;
-        }
-
-        .loader-text::after{
-          content:'';
-          position:absolute;
-          bottom:-12px;
-          left:50%;
-          transform:translateX(-50%) scaleX(0);
-          width:60px;
-          height:2px;
-          background:linear-gradient(90deg, transparent, #D90429, transparent);
-          animation:textLine 1.2s ease 1.2s forwards;
         }
 
         .loader-progress{
           position:absolute;
           bottom:0;
           left:0;
-          height:3px;
-          background:linear-gradient(90deg, #D90429, #EF233C);
+          height:1px;
+          background:#c4161c;
           width:0%;
-          animation:progressLoad 1.5s ease forwards;
-          box-shadow:0 0 10px rgba(217,4,41,0.5);
+          animation:progressLoad 1.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
-        @keyframes rotate{
-          from{
-            transform:rotate(0deg);
-          }
-          to{
-            transform:rotate(360deg);
-          }
-        }
-
-        @keyframes pulse{
-          0%, 100%{
-            transform:translate(-50%, -50%) scale(1);
-            opacity:0.3;
-          }
-          50%{
-            transform:translate(-50%, -50%) scale(1.2);
-            opacity:0.1;
-          }
-        }
-
-        @keyframes logoEntrance{
+        @keyframes logoReveal{
           0%{
             opacity:0;
-            transform:scale(0.7) translateY(30px) rotate(-5deg);
-          }
-          60%{
-            transform:scale(1.05) translateY(-5px) rotate(2deg);
+            transform:translateY(20px) scale(0.95);
           }
           100%{
             opacity:1;
-            transform:scale(1) translateY(0) rotate(0deg);
+            transform:translateY(0) scale(1);
           }
         }
 
-        @keyframes logoFloat{
-          0%, 100%{
-            transform:translateY(0);
+        @keyframes lineReveal{
+          0%{
+            opacity:0;
+            transform:scaleY(0);
+          }
+          100%{
+            opacity:1;
+            transform:scaleY(1);
+          }
+        }
+
+        @keyframes lineDraw{
+          0%{
+            height:0;
+            opacity:0;
           }
           50%{
-            transform:translateY(-8px);
+            opacity:1;
           }
-        }
-
-        @keyframes ringPulse{
-          0%, 100%{
-            transform:scale(0.95);
+          100%{
+            height:60px;
             opacity:0.3;
           }
-          50%{
-            transform:scale(1.1);
-            opacity:0.1;
-          }
         }
 
-        @keyframes logoGlow{
-          0%, 100%{
-            transform:translate(-50%, -50%) scale(0.8);
-            opacity:0.4;
-          }
-          50%{
-            transform:translate(-50%, -50%) scale(1);
-            opacity:0.2;
-          }
-        }
-
-        @keyframes fadeInUp{
-          from{
+        @keyframes textReveal{
+          0%{
             opacity:0;
-            transform:translateY(20px);
+            transform:translateY(8px);
           }
-          to{
+          100%{
             opacity:1;
             transform:translateY(0);
-          }
-        }
-
-        @keyframes textLine{
-          from{
-            transform:translateX(-50%) scaleX(0);
-            opacity:0;
-          }
-          to{
-            transform:translateX(-50%) scaleX(1);
-            opacity:1;
           }
         }
 
         @keyframes progressLoad{
-          from{
+          0%{
             width:0%;
+            opacity:0;
           }
-          to{
+          10%{
+            opacity:1;
+          }
+          100%{
             width:100%;
+            opacity:1;
           }
         }
     </style>
@@ -1341,12 +1235,13 @@
     </button>
     
     <!-- Preloader -->
-    <div class="loader" id="preloader">
+    <div class="loader" id="loader">
         <div class="loader-content">
             <div class="loader-logo">
-                <img src="../img/99cafe-logo2.png" alt="99 Cafe">
+                <img src="../img/99logo.png" alt="99 Cafe">
             </div>
-            <div class="loader-text loading-label">Cafe</div>
+            <div class="loader-line"></div>
+            <div class="loader-text">Loading</div>
         </div>
         <div class="loader-progress"></div>
     </div>
@@ -1574,142 +1469,6 @@
             <!-- Drinks Category -->
             <div id="drinks" class="category-content fade-section show">
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- Fresher -->
-                    <div class="bg-cafe-white rounded-xl p-6 shadow-lg">
-                        <h3 class="text-2xl font-bold text-cafe-red mb-4 border-b-2 border-cafe-red pb-2">
-                            <i class="fas fa-leaf text-green-500 ml-2"></i>
-                            Fresher
-                        </h3>
-                        <div class="space-y-3">
-                            <div class="menu-item bg-cafe-gray rounded-lg p-4">
-                            <div class="flex justify-between items-center">
-                                <div>
-                                    <h4 class="font-semibold text-cafe-black">Tango Fresher</h4>
-                                    <p class="text-sm text-cafe-black/60">(Green Apple & Kiwi)</p>
-                                    <p class="text-sm font-semibold text-cafe-red">Soda</p>
-                                    <p class="text-sm font-semibold text-cafe-red">Red Bull + 3.99 NIS</p>
-                                </div>
-                                <div class="text-right price-group">
-                                    <div class="price-chip"><span class="label">Mini</span><span class="font-bold text-cafe-red">17.99</span></div>
-                                    <div class="price-chip mt-2 ml-auto"><span class="label">Normal</span><span class="font-bold text-cafe-red">19.99</span></div>
-                                </div>
-                            </div>
-                            </div>
-                            <div class="menu-item bg-cafe-gray rounded-lg p-4">
-                                <div class="flex justify-between items-center">
-                                    <div>
-                                        <h4 class="font-semibold text-cafe-black">Streki Fresher</h4>
-                                        <p class="text-sm text-cafe-black/60">(Strawberry & Kiwi)</p>
-                                        <p class="text-sm font-semibold text-cafe-red">Soda</p>
-                                        <p class="text-sm font-semibold text-cafe-red">Red Bull + 3.99 NIS</p>
-                                    </div>
-                                    <div class="text-right price-group">
-                                        <div class="price-chip"><span class="label">Mini</span><span class="font-bold text-cafe-red">17.99</span></div>
-                                        <div class="price-chip mt-2 ml-auto"><span class="label">Normal</span><span class="font-bold text-cafe-red">19.99</span></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="menu-item bg-cafe-gray rounded-lg p-4">
-                                <div class="flex justify-between items-center">
-                                    <div>
-                                        <h4 class="font-semibold text-cafe-black">Pinerazz Fresher</h4>
-                                        <p class="text-sm text-cafe-black/60">(Pineapple & Raspberry)</p>
-                                        <p class="text-sm font-semibold text-cafe-red">Soda</p>
-                                        <p class="text-sm font-semibold text-cafe-red">Red Bull + 3.99 NIS</p>
-                                    </div>
-                                    <div class="text-right price-group">
-                                        <div class="price-chip"><span class="label">Mini</span><span class="font-bold text-cafe-red">17.99</span></div>
-                                        <div class="price-chip mt-2 ml-auto"><span class="label">Normal</span><span class="font-bold text-cafe-red">19.99</span></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="menu-item bg-cafe-gray rounded-lg p-4">
-                                <div class="flex justify-between items-center">
-                                    <div>
-                                        <h4 class="font-semibold text-cafe-black">Hawaiian Fresher</h4>
-                                        <p class="text-sm text-cafe-black/60">(Tropical & Pineapple)</p>
-                                        <p class="text-sm font-semibold text-cafe-red">Soda</p>
-                                        <p class="text-sm font-semibold text-cafe-red">Red Bull + 3.99 NIS</p>
-                                    </div>
-                                    <div class="text-right price-group">
-                                        <div class="price-chip"><span class="label">Mini</span><span class="font-bold text-cafe-red">17.99</span></div>
-                                        <div class="price-chip mt-2 ml-auto"><span class="label">Normal</span><span class="font-bold text-cafe-red">19.99</span></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="menu-item bg-cafe-gray rounded-lg p-4">
-                                <div class="flex justify-between items-center">
-                                    <div>
-                                        <h4 class="font-semibold text-cafe-black">Zest Fresher</h4>
-                                        <p class="text-sm text-cafe-black/60">(Watermelon & Green Apple)</p>
-                                        <p class="text-sm font-semibold text-cafe-red">Soda</p>
-                                        <p class="text-sm font-semibold text-cafe-red">Red Bull + 3.99 NIS</p>
-                                    </div>
-                                    <div class="text-right price-group">
-                                        <div class="price-chip"><span class="label">Mini</span><span class="font-bold text-cafe-red">17.99</span></div>
-                                        <div class="price-chip mt-2 ml-auto"><span class="label">Normal</span><span class="font-bold text-cafe-red">19.99</span></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="menu-item bg-cafe-gray rounded-lg p-4">
-                                <div class="flex justify-between items-center">
-                                    <div>
-                                        <h4 class="font-semibold text-cafe-black">
-                                            Pango Fresher</h4>
-                                        <p class="text-sm text-cafe-black/60">(Pashion Fruit & Mango)</p>
-                                        <p class="text-sm font-semibold text-cafe-red">Soda</p>
-                                        <p class="text-sm font-semibold text-cafe-red">Red Bull + 3.99 NIS</p>
-                                    </div>
-                                    <div class="text-right price-group">
-                                        <div class="price-chip"><span class="label">Mini</span><span class="font-bold text-cafe-red">17.99</span></div>
-                                        <div class="price-chip mt-2 ml-auto"><span class="label">Normal</span><span class="font-bold text-cafe-red">19.99</span></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="menu-item bg-cafe-gray rounded-lg p-4">
-                                <div class="flex justify-between items-center">
-                                    <div>
-                                        <h4 class="font-semibold text-cafe-black">
-                                            Pina Colada</h4>
-                                        <p class="text-sm text-cafe-black/60">(Pineapple & Coconut)</p>
-                                        <p class="text-sm font-semibold text-cafe-red">Soda</p>
-                                        <p class="text-sm font-semibold text-cafe-red">Red Bull + 3.99 NIS</p>
-                                    </div>
-                                    <div class="text-right price-group">
-                                        <div class="price-chip"><span class="label">Mini</span><span class="font-bold text-cafe-red">17.99</span></div>
-                                        <div class="price-chip mt-2 ml-auto"><span class="label">Normal</span><span class="font-bold text-cafe-red">19.99</span></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="menu-item bg-cafe-gray rounded-lg p-4">
-                                <div class="flex justify-between items-center">
-                                    <div>
-                                        <h4 class="font-semibold text-cafe-black">choose Your own Fresher</h4>
-                                        <p class="text-sm text-cafe-black/60">(Pineapple)</p>
-                                        <p class="text-sm text-cafe-black/60">(Blueberry)</p>
-                                        <p class="text-sm text-cafe-black/60">(Mixberry )</p>
-                                        <p class="text-sm text-cafe-black/60">(Mango)</p>
-                                        <p class="text-sm text-cafe-black/60">(Kiwi)</p>
-                                        <p class="text-sm text-cafe-black/60">(Apple)</p>
-                                        <p class="text-sm text-cafe-black/60">(Strawberry)</p>
-                                        <p class="text-sm text-cafe-black/60">(Passion Fruit)</p>
-                                        <p class="text-sm text-cafe-black/60">(Raspberry)</p>
-                                        <p class="text-sm text-cafe-black/60">(Blu Curacao)</p>
-                                        <p class="text-sm text-cafe-black/60">(Coconut)</p>
-                                        <p class="text-sm text-cafe-black/60">(Watermelon)</p>
-                                        <p class="text-sm font-semibold text-cafe-red">Soda</p>
-                                        <p class="text-sm font-semibold text-cafe-red">Red Bull + 3.99 NIS</p>
-                                        
-                                    </div>
-                                    <div class="text-right price-group">
-                                        <div class="price-chip"><span class="label">Mini</span><span class="font-bold text-cafe-red">17.99</span></div>
-                                        <div class="price-chip mt-2 ml-auto"><span class="label">Normal</span><span class="font-bold text-cafe-red">19.99</span></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        </div>
-
                     <!-- Ice Latte -->
                     <div class="bg-cafe-white rounded-xl p-6 shadow-lg">
                         <h3 class="text-2xl font-bold text-cafe-red mb-4 border-b-2 border-cafe-red pb-2">
@@ -2364,10 +2123,10 @@
 
         // Preloader fade out
         window.addEventListener('load', () => {
-            const pre = document.getElementById('preloader');
-            if (!pre) return;
+            const loader = document.getElementById('loader');
+            if (!loader) return;
             setTimeout(() => {
-                pre.classList.add('hidden');
+                loader.classList.add('hidden');
                 // After preloader is hidden, auto-scroll to menu and switch to Food tab
                 setTimeout(() => {
                     const menuSection = document.getElementById('menu');
@@ -3696,9 +3455,25 @@
                 const adminItems = JSON.parse(stored);
                 if (!Array.isArray(adminItems) || adminItems.length === 0) return;
                 
+                // Filter out Fresher items (Tango Fresher, Pango Fresher, etc.)
+                const filteredItems = adminItems.filter(item => {
+                    const nameEn = (item.nameEn || '').toLowerCase();
+                    const nameAr = (item.nameAr || '').toLowerCase();
+                    const group = (item.group || '').toLowerCase();
+                    
+                    // Remove items with "Fresher" in name or group
+                    if (nameEn.includes('fresher') || nameAr.includes('فريشر') || 
+                        nameEn.includes('tango fresher') || nameAr.includes('تانغو فريشر') ||
+                        nameEn.includes('pango fresher') || nameAr.includes('بانغو فريشر') ||
+                        group.includes('fresher') || group.includes('فريشر')) {
+                        return false;
+                    }
+                    return true;
+                });
+                
                 // Group items by category and group
                 const grouped = {};
-                adminItems.forEach(item => {
+                filteredItems.forEach(item => {
                     if (!grouped[item.category]) grouped[item.category] = {};
                     if (!grouped[item.category][item.group || 'default']) {
                         grouped[item.category][item.group || 'default'] = [];
@@ -3808,7 +3583,7 @@
                 
                 // Apply translations if language changes
                 const observer = new MutationObserver(() => {
-                    adminItems.forEach(item => {
+                    filteredItems.forEach(item => {
                         const itemEl = document.querySelector(`[data-item-id="${item.id}"]`);
                         if (!itemEl) return;
                         const h4 = itemEl.querySelector('h4');
